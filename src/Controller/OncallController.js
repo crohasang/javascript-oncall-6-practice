@@ -1,4 +1,5 @@
 import ScheduleTable from "../models/ScheduleTable.js";
+import workerArrayConverter from "../utils/workerArrayConverter.js";
 import InputView from "../views/InputView.js";
 
 class OnCallController {
@@ -6,9 +7,9 @@ class OnCallController {
 
   #startDay;
 
-  #weekdayWorkerArray;
+  #weekdayWorkers;
 
-  #weekendWorkerArray;
+  #weekendWorkers;
 
   #scheduleTable;
 
@@ -17,14 +18,15 @@ class OnCallController {
     this.#scheduleTable = [];
     this.#startMonth = null;
     this.#startDay = null;
-    this.#weekdayWorkerArray = [];
-    this.#weekendWorkerArray = [];
+    this.#weekdayWorkers = null;
+    this.#weekendWorkers = null;
   }
 
   async play() {
     await this.getInput();
 
-    this.createScheduleTable();
+    const table = this.createScheduleTable();
+    console.log(table);
   }
 
   async getInput() {
@@ -32,16 +34,16 @@ class OnCallController {
     this.#startMonth = month;
     this.#startDay = day;
 
-    this.#weekdayWorkerArray = await this.inputView.getWeekdayWorkerInput();
-    this.#weekendWorkerArray = await this.inputView.getWeekendWorkerInput();
+    this.#weekdayWorkers = await this.inputView.getWeekdayWorkerInput();
+    this.#weekendWorkers = await this.inputView.getWeekendWorkerInput();
   }
 
   createScheduleTable() {
     return new ScheduleTable(
       this.#startMonth,
       this.#startDay,
-      this.#weekdayWorkerArray,
-      this.#weekendWorkerArray
+      workerArrayConverter(this.#weekdayWorkers),
+      workerArrayConverter(this.#weekendWorkers)
     );
   }
 }

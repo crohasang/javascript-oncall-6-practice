@@ -23,6 +23,8 @@ class ScheduleTable {
     this.#startDayOfWeek = startDayOfWeek;
     this.#weekdayWorkerArray = weekdayWorkerArray;
     this.#weekendWorkerArray = weekendWorkerArray;
+
+    this.createDays();
   }
 
   createDays() {
@@ -31,14 +33,54 @@ class ScheduleTable {
       currentDay <= this.#calculateFinalDay();
       currentDay++
     ) {
-      this.#schedule.push(
-        new Day({
-          currentDay,
-          dayOfWeek: this.#calculateDayOfWeek(currentDay),
-          isHoliday: this.#isHoliday,
-        })
-      );
+      const currentDayOfWeek = this.#calculateDayOfWeek(currentDay);
+
+      const isCurrentHoliday = this.#isHoliday(this.#startMonth, currentDay);
+
+      // 휴일 비상근무
+      if (
+        isCurrentHoliday ||
+        this.#calculateDayOfWeek(currentDay) === "토" ||
+        this.#calculateDayOfWeek(currentDay) === "일"
+      ) {
+        const currentWeekendWorkerIndex = this.#findNextWorkerIndex(
+          this.#weekendWorkerArray
+        );
+
+        const currentWeekendWorker =
+          this.#weekendWorkerArray[currentWeekendWorkerIndex];
+
+        this.#schedule.push(
+          new Day({
+            day: currentDay,
+            dayOfWeek: currentDayOfWeek,
+            worker: currentWeekendWorker,
+            isDayHoliday: isCurrentHoliday,
+          })
+        );
+      }
+
+      // 평일 비상근무
+      else {
+        const currentWeekdayWorkerIndex = this.#findNextWorkerIndex(
+          this.#weekdayWorkerArray
+        );
+
+        const currentWeekdayWorker =
+          this.#weekdayWorkerArray[currentWeekdayWorkerIndex];
+
+        this.#schedule.push(
+          new Day({
+            day: currentDay,
+            dayOfWeek: currentDayOfWeek,
+            worker: currentWeekdayWorker,
+            isDayHoliday: isCurrentHoliday,
+          })
+        );
+      }
     }
+
+    return this.#schedule;
   }
 
   #calculateFinalDay() {
@@ -79,11 +121,21 @@ class ScheduleTable {
     return DAY_OF_WEEK[(startDayOfWeekIndex + currentDayRemainder) % 7];
   }
 
-  #isHoliday(currentDay) {
+  #isHoliday(currentMonth, currentDay) {
     return HOLIDAY.some(
-      (holiday) =>
-        this.#startMonth === holiday.MONTH && currentDay === holiday.DAY
+      (holiday) => currentMonth === holiday.MONTH && currentDay === holiday.DAY
     );
+  }
+
+  #findNextWorkerIndex(workerArray) {
+    for (let i = 0; i < workerArray.length; i++) {
+      if (workerArray.putInTable === false) {
+        workerArray[i].putInTable = true;
+        return i;
+      }
+    }
+
+    return null;
   }
 }
 

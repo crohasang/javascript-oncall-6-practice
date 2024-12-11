@@ -3,15 +3,15 @@ class Day {
 
   #dayOfWeek;
 
-  #isHoliday;
-
   #worker;
 
-  constructor(day, dayOfWeek, worker) {
+  #isDayHoliday;
+
+  constructor({day, dayOfWeek, worker, isDayHoliday}) {
     this.#day = day;
     this.#dayOfWeek = dayOfWeek;
-    this.#isHoliday = false;
     this.#worker = worker;
+    this.#isDayHoliday = isDayHoliday;
   }
 }
 
