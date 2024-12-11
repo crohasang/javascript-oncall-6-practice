@@ -1,30 +1,60 @@
 const MONTH = Object.freeze({
-  JANUARY: 31,
-  FEBRUARY: 28,
-  MARCH: 31,
-  APRIL: 30,
-  MAY: 31,
-  JUNE: 30,
-  JULY: 31,
-  AUGUST: 31,
-  SEPTEMBER: 30,
-  OCTOBER: 31,
-  NOVEMBER: 30,
-  DECEMBER: 31,
+  JANUARY: 1,
+  FEBRUARY: 2,
+  MARCH: 3,
+  APRIL: 4,
+  MAY: 5,
+  JUNE: 6,
+  JULY: 7,
+  AUGUST: 8,
+  SEPTEMBER: 9,
+  OCTOBER: 10,
+  NOVEMBER: 11,
+  DECEMBER: 12,
+
+  DAY: {
+    TWENTY_EIGHT: 28,
+    THIRTY: 30,
+    THIRTY_ONE: 31,
+  },
 });
 
-const DAY = Object.freeze(["월", "화", "수", "목", "금", "토", "일"]);
+const DAY_OF_WEEK = Object.freeze(["월", "화", "수", "목", "금", "토", "일"]);
 
-const HOLIDAY = Object.freeze(
-  [JANUARY, 1],
-  [MARCH, 1],
-  [MAY, 5],
-  [JUNE, 6],
-  [JULY, 15],
-  [OCTOBER, 3],
-  [OCTOBER, 9],
-  [DECEMBER, 24]
-);
+const HOLIDAY = Object.freeze([
+  {
+    Month: MONTH.JANUARY,
+    Day: 1,
+  },
+  {
+    Month: MONTH.MARCH,
+    Day: 1,
+  },
+  {
+    Month: MONTH.MAY,
+    Day: 5,
+  },
+  {
+    Month: MONTH.JUNE,
+    DAY: 6,
+  },
+  {
+    MONTH: MONTH.AUGUST,
+    DAY: 15,
+  },
+  {
+    MONTH: MONTH.OCTOBER,
+    DAY: 3,
+  },
+  {
+    MONTH: MONTH.OCTOBER,
+    DAY: 9,
+  },
+  {
+    MONTH: MONTH.DECEMBER,
+    DAY: 25,
+  },
+]);
 
 const WORKER = Object.freeze({
   MINIMUM: 5,
@@ -35,4 +65,4 @@ const NICKNAME = Object.freeze({
   MAXIMUM: 5,
 });
 
-export { MONTH, DAY, HOLIDAY, WORKER, NICKNAME };
+export { MONTH, DAY_OF_WEEK, HOLIDAY, WORKER, NICKNAME };
