@@ -1,6 +1,7 @@
 import { Console } from "@woowacourse/mission-utils";
 import { INPUT_MESSAGES } from "../constants/messages.js";
 import { validateNicknameDuplicatedOrOverFive } from "../validators/ValidateNickname.js";
+import { validateMonthAndDayOfWeek } from "../validators/ValidateMonthAndDayOfWeek.js";
 
 class InputView {
   async getStartMonthDayInput() {
@@ -10,7 +11,13 @@ class InputView {
 
     const [month, day] = monthAndDay.split(",");
 
-    return [month, day];
+    try {
+      validateMonthAndDayOfWeek(month, day);
+      return [month, day];
+    } catch (error) {
+      Console.print(error.message);
+      return this.getStartMonthDayInput();
+    }
   }
 
   async getWeekdayWorkerInput() {
