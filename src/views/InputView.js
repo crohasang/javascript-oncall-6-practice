@@ -1,5 +1,6 @@
 import { Console } from "@woowacourse/mission-utils";
 import { INPUT_MESSAGES } from "../constants/messages.js";
+import { validateNicknameDuplicatedOrOverFive } from "../validators/ValidateNickname.js";
 
 class InputView {
   async getStartMonthDayInput() {
@@ -17,7 +18,13 @@ class InputView {
       INPUT_MESSAGES.WEEKDAY_WORKER_INPUT
     );
 
-    return weekdayWorker;
+    try {
+      validateNicknameDuplicatedOrOverFive(weekdayWorker);
+      return weekdayWorker;
+    } catch (error) {
+      Console.print(error.message);
+      return this.getWeekdayWorkerInput();
+    }
   }
 
   async getWeekendWorkerInput() {
@@ -25,7 +32,13 @@ class InputView {
       INPUT_MESSAGES.WEEKEND_WORKER_INPUT
     );
 
-    return weekendWorker;
+    try {
+      validateNicknameDuplicatedOrOverFive(weekendWorker);
+      return weekendWorker;
+    } catch (error) {
+      Console.print(error.message);
+      return this.getWeekendWorkerInput();
+    }
   }
 }
 
