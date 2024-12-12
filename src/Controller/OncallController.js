@@ -1,5 +1,6 @@
 import ScheduleTable from "../models/ScheduleTable.js";
 import workerArrayConverter from "../utils/workerArrayConverter.js";
+import ValidateWorkerNumber from "../validators/ValidateWorkerNumber.js";
 import InputView from "../views/InputView.js";
 import OutputView from "../views/OutputView.js";
 
@@ -26,6 +27,8 @@ class OnCallController {
 
   async play() {
     await this.getInput();
+
+    ValidateWorkerNumber(this.#weekdayWorkers, this.#weekdayWorkers);
 
     const table = this.createScheduleTable();
 
