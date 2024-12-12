@@ -28,6 +28,8 @@ class ScheduleTable {
   }
 
   createDays() {
+    let yesterdayWorker = "";
+
     for (
       let currentDay = 1;
       currentDay <= this.#calculateFinalDay();
@@ -37,7 +39,10 @@ class ScheduleTable {
 
       const currentDayOfWeek = this.#calculateDayOfWeek(currentDay);
 
-      const isCurrentHoliday = this.#isHoliday(this.#startMonth, currentDay);
+      const isCurrentHoliday = this.#isHoliday(
+        Number(this.#startMonth),
+        currentDay
+      );
 
       // 휴일 비상근무
       if (
@@ -54,8 +59,19 @@ class ScheduleTable {
           return this.#schedule;
         }
 
-        const currentWeekendWorker =
+        let currentWeekendWorker =
           this.#weekendWorkerArray[currentWeekendWorkerIndex];
+
+        if (
+          this.#isWorkedYesterday(currentWeekendWorker.name, yesterdayWorker)
+        ) {
+          this.#weekendWorkerArray[currentWeekendWorkerIndex] =
+            this.#weekendWorkerArray[currentWeekendWorkerIndex + 1];
+          this.#weekendWorkerArray[currentWeekendWorkerIndex + 1] =
+            currentWeekendWorker;
+          currentWeekendWorker =
+            this.#weekendWorkerArray[currentWeekendWorkerIndex];
+        }
 
         this.#schedule.push(
           new Day({
@@ -66,6 +82,8 @@ class ScheduleTable {
             isDayHoliday: isCurrentHoliday,
           })
         );
+
+        yesterdayWorker = currentWeekendWorker.name;
       }
 
       // 평일 비상근무
@@ -79,9 +97,19 @@ class ScheduleTable {
           return this.#schedule;
         }
 
-        const currentWeekdayWorker =
+        let currentWeekdayWorker =
           this.#weekdayWorkerArray[currentWeekdayWorkerIndex];
 
+        if (
+          this.#isWorkedYesterday(currentWeekdayWorker.name, yesterdayWorker)
+        ) {
+          this.#weekdayWorkerArray[currentWeekdayWorkerIndex] =
+            this.#weekdayWorkerArray[currentWeekdayWorkerIndex + 1];
+          this.#weekdayWorkerArray[currentWeekdayWorkerIndex + 1] =
+            currentWeekdayWorker;
+          currentWeekdayWorker =
+            this.#weekendWorkerArray[currentWeekdayWorkerIndex];
+        }
         this.#schedule.push(
           new Day({
             month: currentMonth,
@@ -91,6 +119,8 @@ class ScheduleTable {
             isDayHoliday: isCurrentHoliday,
           })
         );
+
+        yesterdayWorker = currentWeekdayWorker.name;
       }
     }
 
@@ -130,7 +160,7 @@ class ScheduleTable {
 
   #calculateDayOfWeek(currentDay) {
     const startDayOfWeekIndex = DAY_OF_WEEK.indexOf(this.#startDayOfWeek);
-    const currentDayRemainder = currentDay % 7;
+    const currentDayRemainder = (currentDay - 1) % 7;
 
     return DAY_OF_WEEK[(startDayOfWeekIndex + currentDayRemainder) % 7];
   }
@@ -150,6 +180,14 @@ class ScheduleTable {
     }
 
     return null;
+  }
+
+  #isWorkedYesterday(currentWorkerName, yesterdayWorkerName) {
+    if (currentWorkerName === yesterdayWorkerName) {
+      return true;
+    }
+
+    return false;
   }
 
   getSchedule() {

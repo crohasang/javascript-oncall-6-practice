@@ -9,7 +9,7 @@ class OutputView {
     table.forEach((day) => {
       if (day.getIsDayHoliday()) {
         Console.print(
-          `${day.getMonth()}월 ${day.getDay()}일 ${day.getDayOfWeek()} ${day.getWorker()}`
+          `${day.getMonth()}월 ${day.getDay()}일 ${day.getDayOfWeek()}(휴일) ${day.getWorker()}`
         );
       } else {
         Console.print(

@@ -19,23 +19,23 @@ const MONTH = Object.freeze({
   },
 });
 
-const DAY_OF_WEEK = Object.freeze(["월", "화", "수", "목", "금", "토", "일"]);
+const DAY_OF_WEEK = Object.freeze(["일", "월", "화", "수", "목", "금", "토"]);
 
 const HOLIDAY = Object.freeze([
   {
-    Month: MONTH.JANUARY,
-    Day: 1,
+    MONTH: MONTH.JANUARY,
+    DAY: 1,
   },
   {
-    Month: MONTH.MARCH,
-    Day: 1,
+    MONTH: MONTH.MARCH,
+    DAY: 1,
   },
   {
-    Month: MONTH.MAY,
-    Day: 5,
+    MONTH: MONTH.MAY,
+    DAY: 5,
   },
   {
-    Month: MONTH.JUNE,
+    MONTH: MONTH.JUNE,
     DAY: 6,
   },
   {
