@@ -1,6 +1,7 @@
 import ScheduleTable from "../models/ScheduleTable.js";
 import workerArrayConverter from "../utils/workerArrayConverter.js";
 import InputView from "../views/InputView.js";
+import OutputView from "../views/OutputView.js";
 
 class OnCallController {
   #startMonth;
@@ -15,6 +16,7 @@ class OnCallController {
 
   constructor() {
     this.inputView = new InputView();
+    this.outputView = new OutputView();
     this.#scheduleTable = [];
     this.#startMonth = null;
     this.#startDay = null;
@@ -26,7 +28,8 @@ class OnCallController {
     await this.getInput();
 
     const table = this.createScheduleTable();
-    console.log(table);
+
+    this.outputView.printTable(table);
   }
 
   async getInput() {
@@ -39,12 +42,13 @@ class OnCallController {
   }
 
   createScheduleTable() {
-    return new ScheduleTable(
+    const scheduleTable = new ScheduleTable(
       this.#startMonth,
       this.#startDay,
       workerArrayConverter(this.#weekdayWorkers),
       workerArrayConverter(this.#weekendWorkers)
     );
+    return scheduleTable.getSchedule();
   }
 }
 

@@ -33,6 +33,8 @@ class ScheduleTable {
       currentDay <= this.#calculateFinalDay();
       currentDay++
     ) {
+      const currentMonth = this.#startMonth;
+
       const currentDayOfWeek = this.#calculateDayOfWeek(currentDay);
 
       const isCurrentHoliday = this.#isHoliday(this.#startMonth, currentDay);
@@ -47,14 +49,20 @@ class ScheduleTable {
           this.#weekendWorkerArray
         );
 
+        // 모든 근무자가 이미 배정되었으면 종료
+        if (currentWeekendWorkerIndex === null) {
+          return this.#schedule;
+        }
+
         const currentWeekendWorker =
           this.#weekendWorkerArray[currentWeekendWorkerIndex];
 
         this.#schedule.push(
           new Day({
+            month: currentMonth,
             day: currentDay,
             dayOfWeek: currentDayOfWeek,
-            worker: currentWeekendWorker,
+            worker: currentWeekendWorker.name,
             isDayHoliday: isCurrentHoliday,
           })
         );
@@ -66,14 +74,20 @@ class ScheduleTable {
           this.#weekdayWorkerArray
         );
 
+        // 모든 근무자가 이미 배정되었으면 종료
+        if (currentWeekdayWorkerIndex === null) {
+          return this.#schedule;
+        }
+
         const currentWeekdayWorker =
           this.#weekdayWorkerArray[currentWeekdayWorkerIndex];
 
         this.#schedule.push(
           new Day({
+            month: currentMonth,
             day: currentDay,
             dayOfWeek: currentDayOfWeek,
-            worker: currentWeekdayWorker,
+            worker: currentWeekdayWorker.name,
             isDayHoliday: isCurrentHoliday,
           })
         );
@@ -129,13 +143,17 @@ class ScheduleTable {
 
   #findNextWorkerIndex(workerArray) {
     for (let i = 0; i < workerArray.length; i++) {
-      if (workerArray.putInTable === false) {
+      if (!workerArray[i].putInTable) {
         workerArray[i].putInTable = true;
         return i;
       }
     }
 
     return null;
+  }
+
+  getSchedule() {
+    return this.#schedule;
   }
 }
 
